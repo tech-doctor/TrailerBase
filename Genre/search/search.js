@@ -1,183 +1,170 @@
 
-const search = document.getElementById("search-button");
-//const ul = document.getElementById("content");
-const searchInput =  document.getElementById("search-box");
-const movieGrid =document.getElementById("movie-grid");
+const searchButton = document.getElementById("search-button");
+const searchInput = document.getElementById("search-box");
+const movieGrid = document.getElementById("movie-grid");
 const movieTitleLabel = document.getElementById("movieTitleLabel");
-const paragraphText = document.querySelector('.paragraphText');
+const searchForm = document.getElementById("search-form");
 
+// Modal Elements
+const modal = document.getElementById("movie-modal");
+const closeModalBtn = document.querySelector(".close");
+const overlay = document.getElementById("overlay");
+const modalBody = document.querySelector(".modal-body");
+const modalLoading = document.querySelector(".modal-loading");
 
+const modalImage = document.getElementById("modalImage");
+const modalTitle = document.getElementById("modalTitle");
+const modalDate = document.getElementById("modalDate");
+const modalRating = document.getElementById("modalRating");
+const modalOverview = document.getElementById("modalOverview");
+const videoContainer = document.getElementById("videoContainer");
+const playTrailerBtn = document.getElementById("playTrailerBtn");
 
-let imageUrl = 'https://image.tmdb.org/t/p/';
-let searchResult = '';
- 
- 
-search.addEventListener("click",  (event) => {
-  event.preventDefault()
-  paragraphText.style.display = "none"
-  let searchResult = searchInput.value;
-  console.log(searchResult);
-  searchMovie();
- // movieGrid.innerHTML += movieContentHTML()
-  searchInput.value = '';
-})
+// API Config
+const imageUrl = 'https://image.tmdb.org/t/p/';
+const apiBaseURL = 'https://api.themoviedb.org/3/';
+const apiKey = 'af6b563ec687bcd938b75f366399aa4c';
 
-
-
-function searchMovie()  {
-let searchResult = searchInput.value
-let searchMovieUrl = "https://api.themoviedb.org/3/search/movie?api_key=af6b563ec687bcd938b75f366399aa4c&language=en-US&page=1&include_adult=false&query=" + searchResult;
-  
-let  loader =`<div class="loading"></div>`
-  movieGrid.innerHTML = loader;
-fetch(searchMovieUrl)
-.then(resp => {
-  if(resp.status == 422){
-   movieGrid.innerHTML = "Please enter a movie name... "
+// Handle Search Submit
+searchForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const query = searchInput.value.trim();
+  if (query) {
+    searchMovie(query);
   }
-  return resp;
-})
-.then (resp => resp.json())
-.then(data => {
-  //console.log(data);
-  let dataResult = data.results;
-   if(dataResult.length === 0){
-     movieGrid.innerHTML = `<div style = "color: red;">
-     Please enter a valid movie name and try again...</div>`
-   }
-   dataResult.forEach(dataResult => {
-    let mid = dataResult.id
+});
 
-  //To get  detailed data of each movies
-	let  thisMovieUrl = 'https://api.themoviedb.org/3/movie/'+mid+'/videos?api_key=af6b563ec687bcd938b75f366399aa4c&language=en-US&page=1&include_adult=false&query=';
-	
-  fetch(thisMovieUrl)
-.then (resp => resp.json())
-.then(movieKey => {
-  console.log(movieKey);
-  console.log('movieKey', movieKey)
-  let poster = imageUrl+'w300'+dataResult.poster_path;
-  let title = dataResult.original_title;
-  let releaseDate = dataResult.release_date;
-  let overview = dataResult.overview;
-  let voteAverage = dataResult.vote_average;		
-  let youtubeKey = movieKey.results;
-  // console.log(youtubeKey)
-  
-  // let youtubeLink = 'https://www.youtube.com/watch?v='+youtubeKey;
-  
-  
+async function searchMovie(query) {
+  // Show Loader
+  movieGrid.innerHTML = `<div class="loading"></div>`;
+  movieTitleLabel.textContent = `Results for: "${query}"`;
 
-const movieContentHTML = () => {
-  const result = ` 
-  <div class="eachMovie">
-    <button type="button" id = "btn" class="btnModal"><img  class="image"src="${poster}"></button>	
-    <div class="modal fade" id="exampleModal"role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class= "modal-box">
-        <p class="close">&times</p>
-        <div class = "modal-content">
-          <div class="moviePosterInModal">
-            <a href="#"><img id="modalImage"src="${poster}"></a>
-          </div><br>
-          <div class="movieDetails">
-            <div class="movieName">${title}</div><br>
-            <div class="linkToTrailer"><span class="glyphicon glyphicon-play"></span>&nbspPlay trailer</div><br>
-            ${youtubeKey.length > 0 ? `<iframe id="videoPlayer" height="345" width="720" src="https://www.youtube.com/embed/${youtubeKey[0].key}" frameborder = "0" allowfullscreen>
-            </iframe>`: ''}
-            <div class="release">Release Date: ${releaseDate}</div><br>
-            <div class="overview">${overview}</div><br>
-            <div class="rating">Rating: ${voteAverage}/10
-          </div><br>
-          <div class="grid-wrapper">
-            <div class="btn-primary">8:30 AM</div>
-            <div class="btn-primary">10:00 AM</div>
-            <div class="btn-primary">12:30 PM</div>
-            <div class="btn-primary">3:00 PM</div>
-            <div class="btn-primary">4:10 PM</div>
-            <div class="btn-primary">5:30 PM</div>
-            <div class="btn-primary">8:00 PM</div>
-            <div class="btn-primary">10:30 PM</div>
-          </div>
-        </div>
-      </div> 
-    </div>
-  </div>  `
-    return result    
+  const searchMovieUrl = `${apiBaseURL}search/movie?api_key=${apiKey}&language=en-US&page=1&include_adult=false&query=${encodeURIComponent(query)}`;
+
+  try {
+    const response = await fetch(searchMovieUrl);
+    if (!response.ok) throw new Error('Search failed');
+
+    const data = await response.json();
+    const results = data.results;
+
+    if (!results || results.length === 0) {
+      movieGrid.innerHTML = `<p class="placeholder-text">No movies found matching "${query}". Try another name.</p>`;
+      return;
+    }
+
+    // Save results globally or pass data? We'll render with IDs and fetch details on click.
+    renderResults(results);
+
+  } catch (error) {
+    console.error(error);
+    movieGrid.innerHTML = `<p class="placeholder-text" style="color: red;">Something went wrong. Please try again later.</p>`;
   }
-  
-    movieGrid.innerHTML += movieContentHTML()
-   
-   
-   let loading = document.querySelector('.loading')
-  loading.style.display = "none"
-	
-
-  let movieTitle = searchResult.toUpperCase()
-    movieTitleLabel.innerHTML = movieTitle;
-
-  
-  
-
-  
-    
-  const modal = document.querySelectorAll(".modal");
-  const movieButton =  document.querySelectorAll(".btnModal");
-  const closeButton = document.querySelectorAll(".close");
-  const overlay = document.querySelector(".overlay")
-  const trailer = document.querySelectorAll(".linkToTrailer")
-  const videoPlayer = document.querySelectorAll("#videoPlayer")
-  const contentModal = document.querySelectorAll('#content-modal')
-  
-
-  for( let i=0; i < movieButton.length;  i++) {
-    movieButton[i].addEventListener ("click", (e) => {
-      modal[i].style.display = "flex";
-      overlay.style.display = "block";
-    })
-
-    const closeModal = (event) =>{
-      for(let i = 0; i < modal.length; i++){
-          if(event.target == modal[i]){
-           videoPlayer[i].src = '';
-           modal[i].style.display = 'none'  
-           overlay.style.display = "none";
-          }
-      }
-      }
-      window.onclick = (event) => {
-      closeModal(event);
-      }
-    
-    trailer[i].addEventListener ("click", (e) => {
-        videoPlayer[i].style.display = "block"
-    })
-
-    closeButton[i].addEventListener ("click", () => {
-      videoPlayer[i].src = '';
-      modal[i].style.display = "none";
-      overlay.style.display = "none";
-      console.log('cancel')
-    })
-
-  }   
-})
-	})
-	
-})
-.catch(error => {
-   console.log(error)
-   let loading = document.querySelector('.loading')
-   loading.style.display = "none"
-   movieGrid.innerHTML = `<div style = "color: red;">
-   Something went wrong, please refresh and try again!</div>`
-})	
-
 }
 
+function renderResults(movies) {
+  movieGrid.innerHTML = movies.map(movie => createCard(movie)).join('');
+}
 
-	   
+function TextAbstract(text, length) {
+  if (text == null) return "";
+  if (text.length <= length) return text;
+  text = text.substring(0, length);
+  const last = text.lastIndexOf(" ");
+  text = text.substring(0, last);
+  return text + "...";
+}
 
+function createCard(data) {
+  const { id, title, release_date, poster_path, overview, vote_average } = data;
 
+  const poster = poster_path ? `${imageUrl}w500${poster_path}` : '/Assets/no-image.jpg';
 
+  // Identify the card with the Movie ID to fetch details later
+  // We can also store simple data in data-attributes to avoid a fetch if possible
+  // BUT we need the trailer key, which requires a fetch.
+  // So we'll fetch everything fresh or pass the known data.
 
-	
+  // JSON.stringify small data for the onClick to openModal
+  // Note: Handling quotes in stringify is tricky in inline HTML.
+  // Better to global accessible array or just fetch by ID. 
+  // We'll fetch by ID for simplicity and robustness.
+
+  return `
+      <div class="card" onclick="openModal(${id})">
+       <div class="image">
+         <img loading="lazy" alt="${title}" src="${poster}">
+       </div>
+       <!-- Overlay removed to look cleaner, or add back if requested -->
+      </div>
+    `;
+}
+
+// --- MODAL LOGIC ---
+
+window.openModal = async (movieId) => {
+  modal.style.display = "flex";
+  modalLoading.style.display = "block";
+  modalBody.style.display = "none";
+  videoContainer.innerHTML = ""; // Clear old video
+
+  try {
+    // Fetch Movie Details + Videos
+    // Using append_to_response to get videos in one shot if we were using movie details endpoint
+    // But here we might just need the scalar details we already had?
+    // Let's re-fetch to be safe and simple.
+
+    // 1. Fetch details
+    const detailsUrl = `${apiBaseURL}movie/${movieId}?api_key=${apiKey}&language=en-US`;
+    const detailsRes = await fetch(detailsUrl);
+    const details = await detailsRes.json();
+
+    // 2. Fetch Videos
+    const videosUrl = `${apiBaseURL}movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
+    const videosRes = await fetch(videosUrl);
+    const videosData = await videosRes.json();
+    const trailer = videosData.results.find(v => v.type === 'Trailer') || videosData.results[0];
+
+    // Populate Modal
+    modalImage.src = details.poster_path ? `${imageUrl}w500${details.poster_path}` : '/Assets/no-image.jpg';
+    modalTitle.textContent = details.title;
+    modalDate.textContent = details.release_date;
+    modalRating.textContent = details.vote_average;
+    modalOverview.textContent = details.overview;
+
+    // Setup Trailer Button
+    if (trailer && trailer.key) {
+      playTrailerBtn.style.display = "inline-block";
+      playTrailerBtn.onclick = () => {
+        // Embed Youtube
+        videoContainer.innerHTML = `
+                 <iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1" frameborder="0" allowfullscreen allow="autoplay"></iframe>
+               `;
+        playTrailerBtn.style.display = "none";
+      };
+    } else {
+      playTrailerBtn.style.display = "none";
+      videoContainer.innerHTML = "<p>No trailer available.</p>";
+    }
+
+    // Show
+    modalLoading.style.display = "none";
+    modalBody.style.display = "flex";
+
+  } catch (e) {
+    console.error(e);
+    modalLoading.textContent = "Failed to load details.";
+  }
+}
+
+closeModalBtn.onclick = () => {
+  modal.style.display = "none";
+  videoContainer.innerHTML = ""; // Stop video
+}
+
+window.onclick = (event) => {
+  if (event.target == modal) {
+    modal.style.display = "none";
+    videoContainer.innerHTML = "";
+  }
+}

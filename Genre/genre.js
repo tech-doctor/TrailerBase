@@ -1,163 +1,182 @@
 
 const genreFunc = (genre_id) => {
-  const  imageUrl = 'https://image.tmdb.org/t/p/';
-  const  apiBaseURL = 'https://api.themoviedb.org/3/';
-  const  apiKey = 'af6b563ec687bcd938b75f366399aa4c'
-  const  actionUrl = `${apiBaseURL}genre/${genre_id}/movies?api_key=${apiKey}` 
-  
+  const apiBaseURL = 'https://api.themoviedb.org/3/';
+  const apiKey = 'af6b563ec687bcd938b75f366399aa4c';
+  // Removed imageUrl here as we use it globally or recalculate
+  const imageUrl = 'https://image.tmdb.org/t/p/';
 
-  //function that fetch genre details
-  const fetchGenre = async() => {
-    const response = await fetch(actionUrl);
-    const result = await response.json();
-    return result;
-  }
+  // Inject the Shared Modal HTML if it doesn't exist
+  if (!document.getElementById('movie-modal')) {
+    const modalHTML = `
+        <div id="movie-modal" class="modal">
+            <div class="modal-box">
+                <span class="close">&times;</span>
+                <div class="modal-content">
+                    <div class="modal-loading" style="display: none; text-align: center; padding: 50px;">
+                        <div class="loading"></div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="moviePosterInModal">
+                            <img id="modalImage" src="" alt="Movie Poster">
+                        </div>
+                        <div class="movieDetails">
+                            <h2 id="modalTitle" class="movieName"></h2>
+                            <div>
+                                <div class="release">Release: <span id="modalDate"></span></div>
+                                <div class="rating"><span>⭐</span> <span id="modalRating"></span>/10</div>
+                            </div>
+                            <p id="modalOverview" class="overview"></p>
+                            
+                             <div class="showtimes-container">
+                                <h3>Showtimes</h3>
+                                <div class="grid-wrapper">
+                                    <div class="time-btn">8:30 AM</div>
+                                    <div class="time-btn">10:00 AM</div>
+                                    <div class="time-btn">12:30 PM</div>
+                                    <div class="time-btn">3:00 PM</div>
+                                    <div class="time-btn">4:10 PM</div>
+                                    <div class="time-btn">5:30 PM</div>
+                                    <div class="time-btn">8:00 PM</div>
+                                    <div class="time-btn">10:30 PM</div>
+                                </div>
+                            </div>
 
-  //function that fetch each key(for youtube) from each genre
-  const fetchKey = async(movieId) => {
-    const   thisMovieUrl = `${apiBaseURL}movie/${movieId}/videos?api_key=${apiKey}&language=en-US&page=1&include_adult=false&query=`;
-    const response = await (fetch(thisMovieUrl));
-    const data = await response.json();
-    const key = data.results[0]?.key;
-    return key;
-  }
-
-
-  const movieGrid = document.getElementById("movie-grid");
-  let  loader =`<div class="loading"></div>`
-  movieGrid.innerHTML = loader;
-  fetchGenre()
-  .then(data => {
-    const genreData = data.results;
-    //console.log(genreData)
-    genreData.forEach(result => {
-      fetchKey(result.id)
-      .then(key => {
-        //console.log(key)
-        //console.log(result.poster_path)
-        movieGrid.innerHTML += movieContentHTML(result, key)
-        inner();
-      })
-    })  
-  })
-  .catch(error => {
-    console.log(error)
-    // const movieTitleLabel = document.getElementById("movieTitleLabel");
-    // movieTitleLabel.innerHTML = '';
-    movieGrid.innerHTML += 'something went wrong please, try again...'
-    inner()
-  })
-  
-
- 
-
- 
-  function movieContentHTML(data, youtubeKey) {
-    const {poster_path, original_title, release_date, overview, vote_average } = data;
-    		
-    const result = ` 
-    <div class="eachMovie">
-      <button type="button" id = "btn" class="btnModal"><img  class="image"src=${imageUrl}w200${poster_path}></button>	
-      <div class="modal fade" id="exampleModal"role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class= "modal-box">
-          <p class="close">&times</p>
-          <div class = "modal-content">
-            <div class="moviePosterInModal">
-              <a href="#"><img id="modalImage"src=${imageUrl}w200${poster_path}></a>
-            </div><br>
-            <div class="movieDetails">
-              <div class="movieName">${original_title}</div><br>
-              <div class="linkToTrailer"><span class="glyphicon glyphicon-play"></span>&nbspPlay trailer</div><br>
-
-              <iframe loading= "lazy" id="videoPlayer" height="345" width="720" src="https://www.youtube.com/embed/${youtubeKey}?autoplay=1&controls=0&iv_load_policy=3&loop=1&modestbranding=1&rel=0" frameborder = "0" allow="autoplay" allowfullscreen>
-              </iframe>
-
-              <div class="release">Release Date: ${release_date}</div><br>
-              <div class="overview">${overview}</div><br>
-              <div class="rating">Rating: ${vote_average}/10
-            </div><br>
-            <div class="grid-wrapper">
-              <div class="btn-primary">8:30 AM</div>
-              <div class="btn-primary">10:00 AM</div>
-              <div class="btn-primary">12:30 PM</div>
-              <div class="btn-primary">3:00 PM</div>
-              <div class="btn-primary">4:10 PM</div>
-              <div class="btn-primary">5:30 PM</div>
-              <div class="btn-primary">8:00 PM</div>
-              <div class="btn-primary">10:30 PM</div>
+                            <button id="playTrailerBtn">Watch Trailer</button>
+                            <div id="videoContainer"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div> 
-      </div>
-    </div>  `
-      return result    
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  }
+
+  // DOM Elements after injection
+  const modal = document.getElementById("movie-modal");
+  const closeModalBtn = document.querySelector(".close");
+  const modalBody = document.querySelector(".modal-body");
+  const modalLoading = document.querySelector(".modal-loading");
+
+  // Check if elements exist to avoid null errors (if injection failed)
+  if (modal) {
+    closeModalBtn.onclick = () => {
+      modal.style.display = "none";
+      document.getElementById("videoContainer").innerHTML = "";
     }
-
-    function inner() {
-      const movieTitleLabel = document.getElementById("movieTitleLabel");
-      let loading = document.querySelector('.loading')
-      loading.style.display = "none"
-   
-   function titleFunc(){
-     const helper = {
-       28: 'ACTION',
-       16: 'ANIMATION',
-       35: 'COMEDY',
-       80: 'CRIME',
-       18: 'DRAMA',
-       10402: 'MUSIC',
-       10749: 'ROMANCE'
-     }
-     const genre = helper[genre_id] || 'Random'
-     return genre
-   }
-
-   let movieTitle = titleFunc()
-   movieTitleLabel.innerHTML = movieTitle;
-   
-    
-   const modal = document.querySelectorAll(".modal");
-   const movieButton =  document.querySelectorAll(".btnModal");
-   const closeButton = document.querySelectorAll(".close");
-   const overlay = document.querySelector(".overlay")
-   const trailer = document.querySelectorAll(".linkToTrailer")
-   const videoPlayer = document.querySelectorAll("#videoPlayer")
-   const contentModal = document.querySelectorAll('#content-modal')
-   
- 
-   for( let i=0; i < movieButton.length;  i++) {
-     movieButton[i].addEventListener ("click", (e) => {
-       modal[i].style.display = "flex";
-       overlay.style.display = "block";
-     })
- 
-     const closeModal = (event) =>{
-      for(let i = 0; i < modal.length; i++){
-          if(event.target == modal[i]){
-           videoPlayer[i].src = '';
-           modal[i].style.display = 'none'  
-           overlay.style.display = "none";
-          }
+    window.onclick = (event) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+        document.getElementById("videoContainer").innerHTML = "";
       }
+    }
+  }
+
+
+  const actionUrl = `${apiBaseURL}genre/${genre_id}/movies?api_key=${apiKey}`;
+
+  const fetchGenre = async () => {
+    try {
+      const response = await fetch(actionUrl);
+      const data = await response.json();
+      renderResults(data.results);
+      updateTitle();
+    } catch (error) {
+      console.error(error);
+      document.getElementById("movie-grid").innerHTML = '<p class="error">Failed to load movies.</p>';
+    }
+  }
+
+  const renderResults = (movies) => {
+    const movieGrid = document.getElementById("movie-grid");
+    movieGrid.innerHTML = movies.map(movie => createCard(movie)).join('');
+  }
+
+  const createCard = (data) => {
+    const { id, title, poster_path } = data;
+    const poster = poster_path ? `${imageUrl}w500${poster_path}` : '/Assets/no-image.jpg';
+    // We use global openModal function attached to window or defined here
+    return `
+        <div class="card" onclick="openGenreModal(${id})">
+            <div class="image">
+                <img loading="lazy" alt="${title}" src="${poster}">
+            </div>
+        </div>`;
+  }
+
+  // Define openModal specific to this scope or globally unique
+  window.openGenreModal = async (movieId) => {
+    const modal = document.getElementById("movie-modal");
+    const modalLoading = document.querySelector(".modal-loading");
+    const modalBody = document.querySelector(".modal-body");
+
+    // Element Refs
+    const modalImage = document.getElementById("modalImage");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalDate = document.getElementById("modalDate");
+    const modalRating = document.getElementById("modalRating");
+    const modalOverview = document.getElementById("modalOverview");
+    const videoContainer = document.getElementById("videoContainer");
+    const playTrailerBtn = document.getElementById("playTrailerBtn");
+
+    modal.style.display = "flex";
+    modalLoading.style.display = "block";
+    modalBody.style.display = "none";
+    videoContainer.innerHTML = "";
+
+    try {
+      const detailsUrl = `${apiBaseURL}movie/${movieId}?api_key=${apiKey}&language=en-US`;
+      const videosUrl = `${apiBaseURL}movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
+
+      const [detailsRes, videosRes] = await Promise.all([
+        fetch(detailsUrl),
+        fetch(videosUrl)
+      ]);
+
+      const details = await detailsRes.json();
+      const videosData = await videosRes.json();
+      const trailer = videosData.results.find(v => v.type === 'Trailer') || videosData.results[0];
+
+      // Populate
+      modalImage.src = details.poster_path ? `${imageUrl}w500${details.poster_path}` : '/Assets/no-image.jpg';
+      modalTitle.textContent = details.title;
+      modalDate.textContent = details.release_date;
+      modalRating.textContent = details.vote_average;
+      modalOverview.textContent = details.overview;
+
+      if (trailer && trailer.key) {
+        playTrailerBtn.style.display = "inline-block";
+        playTrailerBtn.onclick = () => {
+          videoContainer.innerHTML = `<iframe src="https://www.youtube.com/embed/${trailer.key}?autoplay=1" frameborder="0" allowfullscreen allow="autoplay"></iframe>`;
+          playTrailerBtn.style.display = "none";
+        }
+      } else {
+        playTrailerBtn.style.display = "none";
       }
 
-      window.onclick = (event) => {
-      closeModal(event);
-      }
-    
-    trailer[i].addEventListener ("click", (e) => {
-        videoPlayer[i].style.display = "block"
-    })
+      modalLoading.style.display = "none";
+      modalBody.style.display = "flex";
 
-    closeButton[i].addEventListener ("click", () => {
-      videoPlayer[i].src = '';
-      modal[i].style.display = "none";
-      overlay.style.display = "none";
-      console.log('cancel')
-    })
-   }
- 
+    } catch (e) {
+      console.error(e);
+      modalLoading.textContent = "Error loading details";
+    }
+  }
 
-    } 
-  
+  function updateTitle() {
+    const movieTitleLabel = document.getElementById("movieTitleLabel");
+    const helper = {
+      28: 'ACTION',
+      16: 'ANIMATION',
+      35: 'COMEDY',
+      80: 'CRIME',
+      18: 'DRAMA',
+      10402: 'MUSIC',
+      10749: 'ROMANCE'
+    }
+    const genreName = helper[genre_id] || 'MOVIES';
+    movieTitleLabel.textContent = genreName;
+  }
+
+  // Start
+  fetchGenre();
 }

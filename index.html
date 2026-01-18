@@ -1,140 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>IMDB</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="css/style.css" rel="stylesheet">
-        <link rel="stylesheet" href="Assets/fontawesome-free-5.13.0-web/css/all.css">
-        <link rel="shortcut icon" type="image/jpg" href="Assets/IMDB icon.jpg"/>  
-      </head>
-    <body>
-      <div class="body">
-        <div class="scroll_up">
-          <i class="fas fa-angle-up"></i>
+
+<head>
+  <title>TrailerBase • Watch Latest Movie Trailers</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="Assets/fontawesome-free-5.13.0-web/css/all.css">
+  <link rel="shortcut icon" type="image/jpg" href="Assets/IMDB icon.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="body">
+    <div class="scroll_up">
+      <i class="fas fa-angle-up"></i>
+    </div>
+    <header class="header">
+      <!-- header -->
+    </header>
+    <main class="content">
+      <div class=" div-1">
+        <div class="left">
+          <span class="browse">BROWSE TRAILERS</span><br>
+          <span class="browse-info">Discover the latest movies & TV shows.<br>Watch official trailers
+            instantly.</span><br>
+          <button onclick="location.href = '#nowPlaying'">Explore <i class="fas fa-angle-double-right"></i></button>
+          <br>
         </div>
-       <div class="header">
-         <!-- header -->
-       </div>
-        <div class="content">
-          <div class=" div-1">
-            <div class="left">
-              <span class="browse">BROWSE MOVIES</span><br>
-              <span class="browse-info">Get movies or TV shows details.<br>watch anywhere, Cancel anytime. </span><br>
-              <button onclick = "location.href = '#nowPlaying'">Explore <i class="fas fa-angle-double-right"></i></button> <br>
+      </div>
+      <!-- <hr> -->
+      <section class="section-feature div-2">
+        <div class="feature-content">
+          <div class="feature-text">
+            <h2 class="feature-title">Trailers Everywhere.</h2>
+            <p class="feature-desc">Experience high-quality trailers on your phone, tablet, laptop, and TV. Stay ahead
+              of every release.</p>
+          </div>
+          <div class="feature-visuals">
+            <img loading="lazy" class="device-img phone" src="Assets/Phone.webp" alt="Mobile App">
+            <img loading="lazy" class="device-img watch" src="Assets/watch.webp" alt="Smart Watch">
+          </div>
+        </div>
+      </section>
+      <div id="nowPlaying" class="nowPlaying-div extra-div">
+        <div class="section div-area">
+          <div class="heading now-playing">
+            <p>NOW PLAYING</p>
+          </div>
+          <div class="slider_container">
+            <i onclick="clickFunctionLeft('now_playing')" class="fa fa-angle-left now_angle_left angle"
+              aria-hidden="true"></i>
+            <div class=" now_playing body">
+
+              <!-- Movie-Card -->
             </div>
-          </div>
-          <!-- <hr> -->
-          <div class="div-2">
-            <!-- <div class="mock_up"> -->
-              <img loading ="lazy" class="img" src="Assets/Phone.webp">
-              <img loading = "lazy" class="img" src="Assets/watch.webp">
-            <!-- </div> -->
-            <div class="watch-div">
-              <span class="watch">WATCH TRAILER.</span><br>
-              <span class="watch-info">Access your favorite movies/TV shows.<br> and watch trailer without paying a dime 😉. </span><br>
-            </div> 
-          </div> 
-          <div id="nowPlaying" class="nowPlaying-div extra-div">
-            <div class="section div-area">
-              <div class="heading">
-                <p>NOW PLAYING</p>
-              </div>
-              <div class="slider_container">
-                <i 
-                onclick="clickFunctionLeft('now_playing')"
-                class="fa fa-angle-left now_angle_left angle" aria-hidden="true"></i>
-                <div class=" now_playing body">
-                  
-                  <!-- Movie-Card -->
-                </div>
-                <i 
-                onclick="clickFunctionRight('now_playing')"
-                class="fa fa-angle-right now_angle_right angle" aria-hidden="true"></i>
-                
-              </div>
-              <div class="home-loader"></div>
-            </div>  
-          </div>
+            <i onclick="clickFunctionRight('now_playing')" class="fa fa-angle-right now_angle_right angle"
+              aria-hidden="true"></i>
 
-          <div id="topRated" class="topRated-div extra-div">
-            <div class="section div-area">
-              <div class="heading">
-                <p class="paragraph-1">featured</p>
-                <p class="paragraph-2">TOP RATED</p>
-                <p class="paragraph-3">Check out Top-rated movies</p>
-              </div>
-              
-              <div class="slider_container">
-                <i 
-                onclick="clickFunctionLeft('top_rated')"
-                class="fa fa-angle-left top_angle_left angle" aria-hidden="true"></i>
-                  <div class="body top_rated">
-                    <!-- Movie-Card -->
-                  </div>
-                  
-                <i 
-                onclick="clickFunctionRight('top_rated')"
-                class="fa fa-angle-right top_angle_right angle" aria-hidden="true"></i>
-               
-              </div>
-              <div class="home-loader"></div>
-              
-            </div>  
           </div>
-          <div class="div-3">
-            <span class="get-more">GET MORE INFO</span><br><span class="get-more-info">on how to use the IMBD API on RapidAPI</span><br>
-            <p><a href="https://rapidapi.com/blog/how-to-use-imdb-api/">Here</a></p>
+          <div class="home-loader"></div>
+          </section>
+        </div>
+
+        <div id="topRated" class="topRated-div extra-div">
+          <section class="section div-area">
+            <div class="heading">
+              <p class="paragraph-1">featured</p>
+              <p class="paragraph-2">TOP RATED</p>
+              <p class="paragraph-3">Check out Top-rated movies</p>
+            </div>
+
+            <div class="slider_container">
+              <i onclick="clickFunctionLeft('top_rated')" class="fa fa-angle-left top_angle_left angle"
+                aria-hidden="true"></i>
+              <div class="body top_rated">
+                <!-- Movie-Card -->
+              </div>
+
+              <i onclick="clickFunctionRight('top_rated')" class="fa fa-angle-right top_angle_right angle"
+                aria-hidden="true"></i>
+
+            </div>
+            <div class="home-loader"></div>
+
+          </section>
+        </div>
+        <div class="div-3 developer-cta">
+          <div class="cta-content">
+            <h2 class="cta-title">Build with TMDb</h2>
+            <p class="cta-desc">Power your applications with the same movie data used here. Access thousands of movies,
+              TV shows, and images.</p>
+            <a href="https://rapidapi.com/blog/how-to-use-imdb-api/" target="_blank" class="cta-button">
+              Read the Guide <i class="fas fa-external-link-alt"></i>
+            </a>
           </div>
         </div>
-         <footer>
-           <div class="footer">
-             <div class="upper">
-               <div class="flex-footer">
-                 <div class=" flex flex-1">
-                   <p style="font-size: 30px; font-weight: 600;">IMDB</p>
-                   <p><a href="#">Address</a></p>
-                   <div class="social-icon">
-                    <a href="https://www.youtube.com/imdb" title="Youtube"><i class="fab fa-youtube "></i></a>
-                    <a href="https://twitter.com/imdb" title="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="https://web.facebook.com/imdb?_rdc=1&_rdr" title="Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/imdb/" title="Instagram"><i class="fab fa-instagram"></i></a>  
-                  </div> 
-                 </div>
-                 <div class=" flex flex-2">
-                   <p class="footer-head">DISPLAY TYPE</p>
-                   <p><a href="/Genre/Action">Action</a></p>
-                   <p> <a href="/Genre/Comedy">Comedy</a> </p>
-                   <p> <a href="/Genre/Drama">Drama</a></p>
-                    <p> <a href="/Genre/Romance">Romance</a></p>
-                 </div>
+      </div>
+      <!-- Footer Component -->
+      <footer></footer> <!-- Placeholder -->
+      <script src="/Component/footer.js"></script>
+  </div>
+  <!-- Removed unused Youtube SDK -->
+  <script id="replace_with_navbar" src="/Component/header.js"></script>
+  <script src="index.js"></script>
+</body>
 
-                 <div class=" flex flex-3">
-                  <p class="footer-head">PRODUCTION</p>
-                  <p><a href="#">2018 Year</a></p>
-                  <p> <a href="#">2019 Year</a> </p>
-                  <p> <a href="#">2020 Year</a></p>
-                  <p> <a href="#">2021 Year</a></p>
-                </div>
-
-                <div class=" flex flex-4">
-                  <p class="footer-head">DISPLAY QUALITY</p>
-                  <p><a href="#">720p HDTV</a></p>
-                  <p> <a href="#">1080p BluRay</a> </p>
-                  <p> <a href="#">720p BluRay</a></p>
-                  <p> <a href="#">1080p HDTV</a></p>
-                </div>
-               </div>
-             </div>
-             <div class="lower">
-              <p Id="copyright"></p>
-              <p>Developed by <a href="https://github.com/tech-doctor">Techie-Doctor</a></p>
-             </div>
-           </div>   
-         </footer>
-      </div> 
-      <script src="https://www.youtube.com/iframe_api"></script>
-      <script id="replace_with_navbar" src="/Component/header.js"></script>
-      <script  src="index.js"></script>
-    </body>
 </html>

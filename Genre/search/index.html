@@ -1,41 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>IMDB</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../../css/style.css" rel="stylesheet">
-    <link href="../../css/search.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../Assets/fontawesome-free-5.13.0-web/css/all.css">
-    <link rel="shortcut icon" type="image/jpg" href="/Assets/IMDB icon.jpg"/>
-  </head>
-  <body>
-    <div class = header>
-      <!-- header -->
+
+<head>
+  <title>IMDB - Search</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="../../css/style.css" rel="stylesheet">
+  <link href="../../css/search.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../Assets/fontawesome-free-5.13.0-web/css/all.css">
+  <link rel="shortcut icon" type="image/jpg" href="/Assets/IMDB icon.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="header">
+    <!-- header -->
+  </header>
+  <main class="content">
+    <div class="search-container">
+      <form id="search-form" class="search-form">
+        <div class="input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input id="search-box" type="search" name="search" placeholder="Search for movies..." autocomplete="off"
+            required>
+        </div>
+        <button id="search-button" type="submit">Search</button>
+      </form>
     </div>
-    <div class="first">
-      <div class="form">
-        <form>
-            <input id="search-box" class="fontAwesome" type="search" name="search" placeholder="Enter movie name..."
-             autocomplete="off"
-             required><i class="fas fa-search"></i>
-            <button id="search-button" type="submit">Search</button>
-            <p class="paragraphText">Sharing a few of our favourite movies...</p>
-        </form>    
+
+    <div class="results-container">
+      <h2 id="movieTitleLabel"></h2>
+      <div id="movie-grid" class="div-area body">
+        <!-- Results will appear here -->
+        <p class="placeholder-text">Enter a movie name to start searching...</p>
       </div>
     </div>
-    <!-- <div class="iframe"></div> -->
-    <div class="movie-container">
-      <div class="overlay"></div>
-      <div class="label-container">
-        <h1 id="movieTitleLabel"></h1>
-      </div>   
-      <div id="movie-grid">
-        <!-- <div class="loading"></div> -->
-        <!-- <p>please wait..</p> -->
+  </main>
+
+  <!-- Global Shared Modal -->
+  <div id="movie-modal" class="modal">
+    <div class="modal-box">
+      <span class="close">&times;</span>
+      <div class="modal-content">
+        <div class="modal-loading">Loading...</div>
+        <div class="modal-body" style="display:none;">
+          <div class="moviePosterInModal">
+            <img id="modalImage" src="" alt="Poster">
+          </div>
+          <div class="movieDetails">
+            <div id="modalTitle" class="movieName"></div>
+            <div class="release">Release Date: <span id="modalDate"></span></div>
+            <div class="rating">Rating: <span id="modalRating"></span>/10</div>
+            <div id="modalOverview" class="overview"></div>
+
+            <div id="trailerContainer" class="linkToTrailer">
+              <!-- <span class="glyphicon glyphicon-play"></span> Play trailer -->
+              <button id="playTrailerBtn"><i class="fas fa-play"></i> Watch Trailer</button>
+            </div>
+            <!-- Iframe or link placeholder -->
+            <div id="videoContainer"></div>
+          </div>
+        </div>
       </div>
-    </div>  
-    <script src = "/Component/header.js"></script>
-    <script src="search.js"></script>
-  </body>
+    </div>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <script src="/Component/header.js"></script>
+  <script src="search.js"></script>
+</body>
+
 </html>

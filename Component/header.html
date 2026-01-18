@@ -1,50 +1,52 @@
 <heading>
-    <div class="navbar">
-      <div>
-        <div class="desktop-view">
-          <div class="nav heading">
-            <div class="left">
-              <p class="imdb"  onclick = "location.href = '/index.html'">IMDB.</p>
-              <p class="nav_link" ><a href="#topRated">Top rated</a></p> 
-              <p class="nav_link"><a href="#nowPlaying">Now playing</a></p>
-              <!-- <p ><a href="">Home</a></p>  -->
-            </div>
-            <div class="right">
-              <p class="genre">Genre <i class ="fas fa-angle-down" id="genre-icon"></i></p>
-              <p class="search"><a href="/Genre/search/">Search</a></p> 
-              <p class="barIcon"><i class="fas fa-bars" ></i></p>
-            </div>
-          </div>
-          <div class="genre-lists">
-            <ul>
-              <li><a href="/Genre/Action">Action</a></li>
-              <li><a href="/Genre/Animation">Animation</a></li>
-              <li><a href="/Genre/Comedy">Comedy</a></li>
-              <li><a href="/Genre/Crime">Crime</a></li>
-              <li><a href="/Genre/Drama">Drama</a></li>
-              <li><a href="/Genre/Music">Music</a></li>
-              <li><a href="/Genre/Romance">Romance</a></li>
-            </ul>
-          </div>
+  <div class="navbar">
+    <div class="desktop-view">
+      <div class="nav heading">
+        <div class="left">
+          <p class="imdb" onclick="location.href = '/index.html'">TrailerBase<span>.</span></p>
+          <p class="nav_link"><a href="/index.html#nowPlaying">Trending</a></p>
+          <p class="nav_link"><a href="/index.html#topRated">Top Rated</a></p>
         </div>
-        <div class="mobile-view">
-          <div>
-          <!-- <p class="now-playing" onclick = "location.href = '/Genre/nowplaying'">Now Playing</p> -->
-          <p class="genre">Genre <i class ="fas fa-angle-right" id="genre-icon"></i></p>
-          <div class="mobile-genrelists">
-            <ul>
-              <li><a href="/Genre/Action">Action</a></li>
-              <li><a href="/Genre/Animation">Animation</a></li>
-              <li><a href="/Genre/Comedy">Comedy</a></li>
-              <li><a href="/Genre/Crime">Crime</a></li>
-              <li><a href="/Genre/Drama">Drama</a></li>
-              <li><a href="/Genre/Music">Music</a></li>
-              <li><a href="/Genre/Romance">Romance</a></li>
-            </ul>
-          </div>
-          <p class="search"><a href="/Genre/search">Search</a></p> 
-          </div>
+        <div class="right">
+          <p class="genre">Genres <i class="fas fa-angle-down" id="genre-icon"></i></p>
+          <p class="search"><a href="/Genre/search/">Search</a></p>
+          <p class="barIcon"><i class="fas fa-bars"></i></p>
         </div>
       </div>
-    </div> 
-  </heading>
+      <div class="genre-lists">
+        <ul>
+          <li><a href="/Genre/Action">Action</a></li>
+          <li><a href="/Genre/Animation">Animation</a></li>
+          <li><a href="/Genre/Comedy">Comedy</a></li>
+          <li><a href="/Genre/Crime">Crime</a></li>
+          <li><a href="/Genre/Drama">Drama</a></li>
+          <li><a href="/Genre/Music">Music</a></li>
+          <li><a href="/Genre/Romance">Romance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mobile-view">
+      <div class="mobile-nav">
+        <div class="mobile-logo" onclick="location.href = '/index.html'">TrailerBase<span>.</span></div>
+        <div class="mobile-menu-trigger"><i class="fas fa-bars"></i></div>
+      </div>
+      <div class="mobile-menu">
+        <div class="genre-toggle">Genres <i class="fas fa-angle-right"></i></div>
+        <div class="mobile-genrelists">
+          <ul>
+            <li><a href="/Genre/Action">Action</a></li>
+            <li><a href="/Genre/Animation">Animation</a></li>
+            <li><a href="/Genre/Comedy">Comedy</a></li>
+            <li><a href="/Genre/Crime">Crime</a></li>
+            <li><a href="/Genre/Drama">Drama</a></li>
+            <li><a href="/Genre/Music">Music</a></li>
+            <li><a href="/Genre/Romance">Romance</a></li>
+          </ul>
+        </div>
+        <a href="/Genre/search" class="mobile-search-link">Search</a>
+        <a href="/index.html#nowPlaying">Trending</a>
+        <a href="/index.html#topRated">Top Rated</a>
+      </div>
+    </div>
+  </div>
+</heading>
