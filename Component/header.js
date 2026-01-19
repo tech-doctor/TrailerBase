@@ -25,6 +25,7 @@ const navbar = () => {
   // Desktop Selectors
   const genreBtn = document.querySelector('.desktop-view .genre');
   const genreList = document.querySelector('.desktop-view .genre-lists');
+  //const genreLists = document.querySelector('.desktop-view .genre-lists ul li a');
 
   // Mobile Selectors
   const mobileMenuTrigger = document.querySelector('.mobile-menu-trigger');
@@ -32,12 +33,58 @@ const navbar = () => {
   const genreToggle = document.querySelector('.genre-toggle');
   const mobileGenreList = document.querySelector('.mobile-genrelists');
 
+
+
+  // console.log(genreLists)
+  // genreLists.forEach((link, index) => {
+  //   link.addEventListener('keydown', (e) => {
+  //     if (e.key === 'ArrowDown') {
+  //       e.preventDefault();
+  //       const next = genreList[index + 1] || genreList[0];
+  //       next.focus();
+  //     }
+
+  //     if (e.key === 'ArrowUp') {
+  //       e.preventDefault();
+  //       const prev = genreList[index - 1] || genreList[links.length - 1];
+  //       prev.focus();
+  //     }
+  //   });
+  // });
+
+  const links = document.querySelectorAll('.genre-lists ul li a ');
+
+  console.log(links)
+  links.forEach((link, index) => {
+    link.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        links[index + 1].focus();
+      }
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        links[index - 1].focus();
+      }
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMenu();
+      }
+
+
+      // 🚫 DO NOT preventDefault for Enter
+      // Let the browser handle it naturally
+    });
+  });
+
   // Desktop Genre Hover/Click
   if (genreBtn && genreList) {
     genreBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const isVisible = genreList.style.display === 'block';
       genreList.style.display = isVisible ? 'none' : 'block';
+      genreBtn.setAttribute('aria-expanded', String(!isVisible));
     });
 
     // Close when clicking outside
@@ -79,6 +126,18 @@ const navbar = () => {
     }
   });
 }
+
+
+//const links = document.querySelectorAll('#genreList a');
+
+
+
+
+
+
+
+
+
 
 //export default navbar();
 

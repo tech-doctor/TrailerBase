@@ -40,9 +40,10 @@
   </main>
 
   <!-- Global Shared Modal -->
-  <div id="movie-modal" class="modal">
+  <div id="movie-modal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalOverview"
+    aria-modal="true">
     <div class="modal-box">
-      <span class="close">&times;</span>
+      <button class="close" aria-label="Close modal" type="button">&times;</button>
       <div class="modal-content">
         <div class="modal-loading">Loading...</div>
         <div class="modal-body" style="display:none;">

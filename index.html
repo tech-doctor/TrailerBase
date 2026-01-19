@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>TrailerBase • Watch Latest Movie Trailers</title>
+  <title>TrailerBase - Watch Latest Movie Trailers</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="css/style.css" rel="stylesheet">
@@ -22,15 +22,15 @@
       <!-- header -->
     </header>
     <main class="content">
-      <div class=" div-1">
+      <section class=" div-1">
         <div class="left">
-          <span class="browse">BROWSE TRAILERS</span><br>
-          <span class="browse-info">Discover the latest movies & TV shows.<br>Watch official trailers
-            instantly.</span><br>
-          <button onclick="location.href = '#nowPlaying'">Explore <i class="fas fa-angle-double-right"></i></button>
-          <br>
+          <h1 class="browse">BROWSE TRAILERS</h1>
+          <p class="browse-info">Discover the latest movies & TV shows.<br>Watch official trailers
+            instantly.</p>
+          <button aria-label="Explore Trailers." onclick="location.href = '#nowPlaying'">Explore Trailers
+            <i class="fas fa-angle-double-right"></i></button>
         </div>
-      </div>
+      </section>
       <!-- <hr> -->
       <section class="section-feature div-2">
         <div class="feature-content">
@@ -40,64 +40,67 @@
               of every release.</p>
           </div>
           <div class="feature-visuals">
-            <img loading="lazy" class="device-img phone" src="Assets/Phone.webp" alt="Mobile App">
-            <img loading="lazy" class="device-img watch" src="Assets/watch.webp" alt="Smart Watch">
+            <img loading="lazy" class="device-img phone" src="Assets/Phone.webp"
+              alt="A mobile mockup showing the app interface on action category">
+            <img loading="lazy" class="device-img watch" src="Assets/watch.webp"
+              alt="A mobile mockup showing the app interface with a movie details">
           </div>
         </div>
       </section>
       <div id="nowPlaying" class="nowPlaying-div extra-div">
-        <div class="section div-area">
+        <section aria-label="You are now on the now playing section" class="section div-area">
           <div class="heading now-playing">
-            <p>NOW PLAYING</p>
+            <h3>NOW PLAYING</h3>
+            <p></p>
           </div>
           <div class="slider_container">
             <i onclick="clickFunctionLeft('now_playing')" class="fa fa-angle-left now_angle_left angle"
-              aria-hidden="true"></i>
+              aria-hidden="true" tabindex="0" role="button" aria-label="Scroll Slider"></i>
             <div class=" now_playing body">
 
               <!-- Movie-Card -->
             </div>
             <i onclick="clickFunctionRight('now_playing')" class="fa fa-angle-right now_angle_right angle"
-              aria-hidden="true"></i>
+              aria-hidden="true" tabindex="0" role="button" aria-label="Scroll Slider"></i>
 
           </div>
           <div class="home-loader"></div>
-          </section>
-        </div>
+        </section>
+
 
         <div id="topRated" class="topRated-div extra-div">
-          <section class="section div-area">
-            <div class="heading">
-              <p class="paragraph-1">featured</p>
-              <p class="paragraph-2">TOP RATED</p>
+          <section aria-label="You are now on the top rated section" class="section div-area">
+            <header class="heading">
+              <h4 class="paragraph-1">featured</h4>
+              <h5 class="paragraph-2">TOP RATED</h5>
               <p class="paragraph-3">Check out Top-rated movies</p>
-            </div>
+            </header>
 
             <div class="slider_container">
               <i onclick="clickFunctionLeft('top_rated')" class="fa fa-angle-left top_angle_left angle"
-                aria-hidden="true"></i>
+                aria-hidden="true" tabindex="0" role="button" aria-label="Scroll Slider"></i>
               <div class="body top_rated">
                 <!-- Movie-Card -->
               </div>
 
               <i onclick="clickFunctionRight('top_rated')" class="fa fa-angle-right top_angle_right angle"
-                aria-hidden="true"></i>
+                aria-hidden="true" tabindex="0" role="button" aria-label="Scroll Slider"></i>
 
             </div>
             <div class="home-loader"></div>
 
           </section>
         </div>
-        <div class="div-3 developer-cta">
-          <div class="cta-content">
-            <h2 class="cta-title">Build with TMDb</h2>
+        <section aria-label="You are now on the developer cta section" class="div-3 developer-cta">
+          <article class="cta-content">
+            <h6 class="cta-title">Build with TMDb</h6>
             <p class="cta-desc">Power your applications with the same movie data used here. Access thousands of movies,
               TV shows, and images.</p>
             <a href="https://rapidapi.com/blog/how-to-use-imdb-api/" target="_blank" class="cta-button">
-              Read the Guide <i class="fas fa-external-link-alt"></i>
+              Read the TMDb API Guide <i class="fas fa-external-link-alt"></i>
             </a>
-          </div>
-        </div>
+          </article>
+        </section>
       </div>
       <!-- Footer Component -->
       <footer></footer> <!-- Placeholder -->

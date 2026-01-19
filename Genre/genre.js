@@ -8,9 +8,17 @@ const genreFunc = (genre_id) => {
   // Inject the Shared Modal HTML if it doesn't exist
   if (!document.getElementById('movie-modal')) {
     const modalHTML = `
-        <div id="movie-modal" class="modal">
+        <div 
+        role="dialog"
+        aria-labelledby="modalTitle"
+        aria-describedby="modalOverview"
+        aria-modal="true"
+        id="movie-modal" class="modal">
             <div class="modal-box">
-                <span class="close">&times;</span>
+                <button
+                type="button"
+                title="Close modal" 
+                class="close" aria-label="Close modal">&times;</button>
                 <div class="modal-content">
                     <div class="modal-loading" style="display: none; text-align: center; padding: 50px;">
                         <div class="loading"></div>
@@ -40,8 +48,11 @@ const genreFunc = (genre_id) => {
                                     <div class="time-btn">10:30 PM</div>
                                 </div>
                             </div>
-
-                            <button id="playTrailerBtn">Watch Trailer</button>
+                            <button 
+                            id="playTrailerBtn"
+                            title="Watch Trailer"
+                            aria-label="Begin watching the trailer"
+                            >Watch Trailer</button>
                             <div id="videoContainer"></div>
                         </div>
                     </div>
@@ -57,19 +68,59 @@ const genreFunc = (genre_id) => {
   const modalBody = document.querySelector(".modal-body");
   const modalLoading = document.querySelector(".modal-loading");
 
+  // Focus Management Variables
+  let previousActiveElement = null;
+  const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
   // Check if elements exist to avoid null errors (if injection failed)
   if (modal) {
     closeModalBtn.onclick = () => {
       modal.style.display = "none";
       document.getElementById("videoContainer").innerHTML = "";
+      if (previousActiveElement) previousActiveElement.focus();
     }
     window.onclick = (event) => {
       if (event.target == modal) {
         modal.style.display = "none";
         document.getElementById("videoContainer").innerHTML = "";
+        if (previousActiveElement) previousActiveElement.focus();
       }
     }
   }
+
+  // Modal Focus Trap
+  modal.addEventListener('keydown', function (e) {
+    const isTabPressed = e.key === 'Tab' || e.keyCode === 9;
+    if (!isTabPressed) return;
+
+    const focusableContent = modal.querySelectorAll(focusableSelector);
+    if (focusableContent.length === 0) return;
+
+    const firstFocusableElement = focusableContent[0];
+    const lastFocusableElement = focusableContent[focusableContent.length - 1];
+
+    if (e.shiftKey) {
+      if (document.activeElement === firstFocusableElement) {
+        lastFocusableElement.focus();
+        e.preventDefault();
+      }
+    } else {
+      if (document.activeElement === lastFocusableElement) {
+        firstFocusableElement.focus();
+        e.preventDefault();
+      }
+    }
+  });
+
+  // Escape Key to Close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.style.display === 'flex') {
+      modal.style.display = 'none';
+      document.getElementById("videoContainer").innerHTML = "";
+      if (previousActiveElement) previousActiveElement.focus();
+    }
+  });
+
 
 
   const actionUrl = `${apiBaseURL}genre/${genre_id}/movies?api_key=${apiKey}`;
@@ -96,15 +147,19 @@ const genreFunc = (genre_id) => {
     const poster = poster_path ? `${imageUrl}w500${poster_path}` : '/Assets/no-image.jpg';
     // We use global openModal function attached to window or defined here
     return `
-        <div class="card" onclick="openGenreModal(${id})">
+        <button 
+        title="${title}"
+        aria-label="Explore ${title} details."
+        class="card" onclick="openGenreModal(${id})">
             <div class="image">
-                <img loading="lazy" alt="${title}" src="${poster}">
+                <img loading="lazy" alt="${title} poster." src="${poster}">
             </div>
-        </div>`;
+        </button>`;
   }
 
   // Define openModal specific to this scope or globally unique
   window.openGenreModal = async (movieId) => {
+    previousActiveElement = document.activeElement;
     const modal = document.getElementById("movie-modal");
     const modalLoading = document.querySelector(".modal-loading");
     const modalBody = document.querySelector(".modal-body");
@@ -112,6 +167,7 @@ const genreFunc = (genre_id) => {
     // Element Refs
     const modalImage = document.getElementById("modalImage");
     const modalTitle = document.getElementById("modalTitle");
+
     const modalDate = document.getElementById("modalDate");
     const modalRating = document.getElementById("modalRating");
     const modalOverview = document.getElementById("modalOverview");
@@ -138,6 +194,7 @@ const genreFunc = (genre_id) => {
 
       // Populate
       modalImage.src = details.poster_path ? `${imageUrl}w500${details.poster_path}` : '/Assets/no-image.jpg';
+
       modalTitle.textContent = details.title;
       modalDate.textContent = details.release_date;
       modalRating.textContent = details.vote_average;
@@ -155,6 +212,10 @@ const genreFunc = (genre_id) => {
 
       modalLoading.style.display = "none";
       modalBody.style.display = "flex";
+
+      // Move focus to close button
+      const focusable = modal.querySelectorAll(focusableSelector);
+      if (focusable.length > 0) focusable[0].focus();
 
     } catch (e) {
       console.error(e);
@@ -179,4 +240,6 @@ const genreFunc = (genre_id) => {
 
   // Start
   fetchGenre();
+
 }
+

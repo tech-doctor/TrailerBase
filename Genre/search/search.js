@@ -20,6 +20,10 @@ const modalOverview = document.getElementById("modalOverview");
 const videoContainer = document.getElementById("videoContainer");
 const playTrailerBtn = document.getElementById("playTrailerBtn");
 
+// Focus Management
+let previousActiveElement = null;
+const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 // API Config
 const imageUrl = 'https://image.tmdb.org/t/p/';
 const apiBaseURL = 'https://api.themoviedb.org/3/';
@@ -53,7 +57,6 @@ async function searchMovie(query) {
       return;
     }
 
-    // Save results globally or pass data? We'll render with IDs and fetch details on click.
     renderResults(results);
 
   } catch (error) {
@@ -66,54 +69,37 @@ function renderResults(movies) {
   movieGrid.innerHTML = movies.map(movie => createCard(movie)).join('');
 }
 
-function TextAbstract(text, length) {
-  if (text == null) return "";
-  if (text.length <= length) return text;
-  text = text.substring(0, length);
-  const last = text.lastIndexOf(" ");
-  text = text.substring(0, last);
-  return text + "...";
-}
-
 function createCard(data) {
-  const { id, title, release_date, poster_path, overview, vote_average } = data;
-
+  const { id, title, poster_path } = data;
   const poster = poster_path ? `${imageUrl}w500${poster_path}` : '/Assets/no-image.jpg';
 
-  // Identify the card with the Movie ID to fetch details later
-  // We can also store simple data in data-attributes to avoid a fetch if possible
-  // BUT we need the trailer key, which requires a fetch.
-  // So we'll fetch everything fresh or pass the known data.
-
-  // JSON.stringify small data for the onClick to openModal
-  // Note: Handling quotes in stringify is tricky in inline HTML.
-  // Better to global accessible array or just fetch by ID. 
-  // We'll fetch by ID for simplicity and robustness.
-
+  // Changed to button for accessibility
   return `
-      <div class="card" onclick="openModal(${id})">
+      <button 
+        class="card" 
+        onclick="openModal(${id})"
+        aria-label="Explore ${title} details."
+        title="${title}"
+      >
        <div class="image">
-         <img loading="lazy" alt="${title}" src="${poster}">
+         <img loading="lazy" alt="${title} poster." src="${poster}">
        </div>
-       <!-- Overlay removed to look cleaner, or add back if requested -->
-      </div>
+      </button>
     `;
 }
 
 // --- MODAL LOGIC ---
 
 window.openModal = async (movieId) => {
+  // Save focus
+  previousActiveElement = document.activeElement;
+
   modal.style.display = "flex";
   modalLoading.style.display = "block";
   modalBody.style.display = "none";
   videoContainer.innerHTML = ""; // Clear old video
 
   try {
-    // Fetch Movie Details + Videos
-    // Using append_to_response to get videos in one shot if we were using movie details endpoint
-    // But here we might just need the scalar details we already had?
-    // Let's re-fetch to be safe and simple.
-
     // 1. Fetch details
     const detailsUrl = `${apiBaseURL}movie/${movieId}?api_key=${apiKey}&language=en-US`;
     const detailsRes = await fetch(detailsUrl);
@@ -127,6 +113,7 @@ window.openModal = async (movieId) => {
 
     // Populate Modal
     modalImage.src = details.poster_path ? `${imageUrl}w500${details.poster_path}` : '/Assets/no-image.jpg';
+    modalImage.alt = `${details.title} poster.`;
     modalTitle.textContent = details.title;
     modalDate.textContent = details.release_date;
     modalRating.textContent = details.vote_average;
@@ -151,20 +138,61 @@ window.openModal = async (movieId) => {
     modalLoading.style.display = "none";
     modalBody.style.display = "flex";
 
+    // Focus on close button or first focusable element inside modal
+    const focusableContent = modal.querySelectorAll(focusableSelector);
+    if (focusableContent.length) {
+      focusableContent[0].focus();
+    }
+
   } catch (e) {
     console.error(e);
     modalLoading.textContent = "Failed to load details.";
   }
 }
 
-closeModalBtn.onclick = () => {
+const closeModal = () => {
   modal.style.display = "none";
   videoContainer.innerHTML = ""; // Stop video
+  if (previousActiveElement) {
+    previousActiveElement.focus();
+  }
 }
+
+closeModalBtn.onclick = closeModal;
 
 window.onclick = (event) => {
   if (event.target == modal) {
-    modal.style.display = "none";
-    videoContainer.innerHTML = "";
+    closeModal();
   }
 }
+
+// Focus Trap
+modal.addEventListener('keydown', function (e) {
+  const isTabPressed = e.key === 'Tab' || e.keyCode === 9;
+  if (!isTabPressed) return;
+
+  const focusableContent = modal.querySelectorAll(focusableSelector);
+  if (focusableContent.length === 0) return;
+
+  const firstFocusableElement = focusableContent[0];
+  const lastFocusableElement = focusableContent[focusableContent.length - 1];
+
+  if (e.shiftKey) { // Shift + Tab
+    if (document.activeElement === firstFocusableElement) {
+      lastFocusableElement.focus();
+      e.preventDefault();
+    }
+  } else { // Tab
+    if (document.activeElement === lastFocusableElement) {
+      firstFocusableElement.focus();
+      e.preventDefault();
+    }
+  }
+});
+
+// Escape key to close
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.style.display === 'flex') {
+    closeModal();
+  }
+});

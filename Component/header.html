@@ -1,19 +1,40 @@
-<heading>
-  <div class="navbar">
-    <div class="desktop-view">
-      <div class="nav heading">
-        <div class="left">
-          <p class="imdb" onclick="location.href = '/index.html'">TrailerBase<span>.</span></p>
-          <p class="nav_link"><a href="/index.html#nowPlaying">Trending</a></p>
-          <p class="nav_link"><a href="/index.html#topRated">Top Rated</a></p>
-        </div>
-        <div class="right">
-          <p class="genre">Genres <i class="fas fa-angle-down" id="genre-icon"></i></p>
-          <p class="search"><a href="/Genre/search/">Search</a></p>
-          <p class="barIcon"><i class="fas fa-bars"></i></p>
-        </div>
+<nav class="navbar">
+  <div class="desktop-view">
+    <div class="nav heading">
+      <div class="left">
+        <p class="imdb" onclick="location.href = '/index.html'">TrailerBase<span>.</span></p>
+        <p class="nav_link"><a aria-label="See Trending Movies." href="/index.html#nowPlaying">Trending</a></p>
+        <p class="nav_link"><a aria-label="See Top Rated Movies." href="/index.html#topRated">Top Rated</a></p>
       </div>
-      <div class="genre-lists">
+      <div class="right">
+        <button class="genre" aria-label="View Movie Genres." aria-haspopup="true" aria-expanded="false"
+          tabindex="0">Genres
+          <i class="fas fa-angle-down" id="genre-icon"></i>
+        </button>
+        <p class="search"><a aria-label="Search Movies" href="/Genre/search/">Search</a></p>
+        <p class="barIcon"><i class="fas fa-bars"></i></p>
+      </div>
+    </div>
+    <div class="genre-lists" id="genreList">
+      <ul>
+        <li><a aria-label="Explore Action Movies." href="/Genre/Action">Action</a></li>
+        <li><a aria-label="Explore Animation Movies." href="/Genre/Animation">Animation</a></li>
+        <li><a aria-label="Explore Comedy Movies." href="/Genre/Comedy">Comedy</a></li>
+        <li><a aria-label="Explore Crime Movies." href="/Genre/Crime">Crime</a></li>
+        <li><a aria-label="Explore Drama Movies." href="/Genre/Drama">Drama</a></li>
+        <li><a aria-label="Explore Music Movies." href="/Genre/Music">Music</a></li>
+        <li><a aria-label="Explore Romance Movies." href="/Genre/Romance">Romance</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="mobile-view">
+    <div class="mobile-nav">
+      <div class="mobile-logo" onclick="location.href = '/index.html'">TrailerBase<span>.</span></div>
+      <div class="mobile-menu-trigger"><i class="fas fa-bars"></i></div>
+    </div>
+    <div class="mobile-menu">
+      <div class="genre-toggle">Genres <i class="fas fa-angle-right"></i></div>
+      <div class="mobile-genrelists">
         <ul>
           <li><a href="/Genre/Action">Action</a></li>
           <li><a href="/Genre/Animation">Animation</a></li>
@@ -24,29 +45,9 @@
           <li><a href="/Genre/Romance">Romance</a></li>
         </ul>
       </div>
-    </div>
-    <div class="mobile-view">
-      <div class="mobile-nav">
-        <div class="mobile-logo" onclick="location.href = '/index.html'">TrailerBase<span>.</span></div>
-        <div class="mobile-menu-trigger"><i class="fas fa-bars"></i></div>
-      </div>
-      <div class="mobile-menu">
-        <div class="genre-toggle">Genres <i class="fas fa-angle-right"></i></div>
-        <div class="mobile-genrelists">
-          <ul>
-            <li><a href="/Genre/Action">Action</a></li>
-            <li><a href="/Genre/Animation">Animation</a></li>
-            <li><a href="/Genre/Comedy">Comedy</a></li>
-            <li><a href="/Genre/Crime">Crime</a></li>
-            <li><a href="/Genre/Drama">Drama</a></li>
-            <li><a href="/Genre/Music">Music</a></li>
-            <li><a href="/Genre/Romance">Romance</a></li>
-          </ul>
-        </div>
-        <a href="/Genre/search" class="mobile-search-link">Search</a>
-        <a href="/index.html#nowPlaying">Trending</a>
-        <a href="/index.html#topRated">Top Rated</a>
-      </div>
+      <a href="/Genre/search" class="mobile-search-link">Search</a>
+      <a href="/index.html#nowPlaying">Trending</a>
+      <a href="/index.html#topRated">Top Rated</a>
     </div>
   </div>
-</heading>
+</nav>

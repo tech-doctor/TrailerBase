@@ -88,7 +88,7 @@ body {
 
 .nav {
   background-color: transparent;
-  padding: 1em 3em;
+  padding: 0.2em 3em;
   color: var(--text-white);
   display: flex;
   align-items: center;
@@ -104,7 +104,7 @@ body {
 .genre-lists {
   /* Toggled by JS (display: block/none) */
   position: absolute;
-  top: 90px;
+  top: 85px;
   /* Below the nav */
   right: 140px;
   /* Align with 'Genre' roughly */
@@ -154,7 +154,9 @@ body {
   transition: all 0.2s;
   font-family: var(--font-main);
   border-bottom: 1px solid #2a2a2a;
+
 }
+
 
 .genre-lists li:last-child a {
   border-bottom: none;
@@ -168,10 +170,22 @@ body {
   border-left: 3px solid var(--primary-color);
 }
 
+.genre-lists ul li a:focus {
+  outline: none;
+  color: white;
+  background-color: rgba(229, 9, 20, 0.2);
+  /* Low opacity primary */
+  padding-left: 25px;
+  border-left: 3px solid var(--primary-color);
+}
+
+
 /* Show dropdown when active */
 .genre-lists.active {
   display: block !important;
+
 }
+
 
 
 .nav .right {
@@ -238,6 +252,15 @@ body {
   cursor: pointer;
   position: relative;
   padding: 10px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 0.95rem;
+  font-family: var(--font-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
   /* margin-right: 20px; */
   transition: color 0.3s;
   /* font-weight: 500; */
@@ -530,7 +553,7 @@ body {
   border: none;
   cursor: pointer;
   font-size: 18px;
-  outline: none;
+  /* outline: none; */
   border-radius: 4px;
   font-weight: 600;
 }
@@ -691,7 +714,7 @@ body {
   content: "";
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: 2.1rem;
   width: 50px;
   border-bottom: 4px solid red;
 }
@@ -722,7 +745,24 @@ body {
   overflow-y: hidden;
   scrollbar-width: none;
   scroll-behavior: smooth;
+  padding: 1em 0em;
 }
+
+.div-area .now_playing button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+
+
+.div-area .now_playing button:focus {
+  transform: scale(1.05);
+}
+
+
+
 
 .topRated-div .div-area .slider_container {
   position: relative;
@@ -741,6 +781,21 @@ body {
   overflow-y: hidden;
   scrollbar-width: none;
   scroll-behavior: smooth;
+  padding: 1em 0em;
+
+}
+
+.div-area .top_rated button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+
+
+.div-area .top_rated button:focus {
+  transform: scale(1.05);
 }
 
 .now_angle_left,
@@ -1374,7 +1429,7 @@ footer {
   padding-top: 20px;
   text-align: center;
   font-size: 0.85rem;
-  color: #666;
+  color: #e5e5e5;
 }
 
 @media (max-width: 768px) {
@@ -1463,6 +1518,7 @@ footer {
   position: relative;
   z-index: 2000;
   background-color: rgba(0, 0, 0, 0.95);
+
   backdrop-filter: blur(20px);
 }
 
@@ -1762,6 +1818,11 @@ footer {
   background: rgba(0, 0, 0, 0.5);
   width: 40px;
   height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+
   text-align: center;
   line-height: 40px;
   border-radius: 50%;
@@ -1779,15 +1840,19 @@ footer {
   padding: 40px;
   box-sizing: border-box;
   overflow: hidden;
+
 }
 
 .modal-body {
   display: flex;
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
   gap: 40px;
   overflow-y: auto;
-  padding-right: 10px;
+  padding: 20px;
+  /* padding: 80px; */
+
+
 }
 
 .modal-body::-webkit-scrollbar {
