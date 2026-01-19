@@ -660,3 +660,22 @@ enhanceAccessibility();
 // But wait, .scroll_up exists. The angles exist.
 
 
+// when #nowplaying is navigated to, focus the first card
+
+const nowPlaying = document.getElementById('nowPlaying');
+console.log(nowPlaying);
+if (nowPlaying) {
+  nowPlaying.addEventListener('focus', (e) => {
+    const skipBtn = nowPlaying.querySelector('.content .nowPlaying-div .now-playing-skip-btn');
+    console.log(skipBtn);
+    if (skipBtn) {
+      skipBtn.style.display = 'block';
+      skipBtn.focus();
+    }
+  });
+}
+
+
+
+
+

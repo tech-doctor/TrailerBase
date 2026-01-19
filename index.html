@@ -47,7 +47,11 @@
           </div>
         </div>
       </section>
-      <div id="nowPlaying" class="nowPlaying-div extra-div">
+      <div id="nowPlaying" class="nowPlaying-div extra-div" tabindex="-1">
+        <!-- Add skip content button for accessibility -->
+        <button class="skip-btn now-playing-skip-btn" aria-label="Click to skip now playing section"
+          onclick="location.href = '#topRated'">Skip now playing
+          section</button>
         <section aria-label="You are now on the now playing section" class="section div-area">
           <div class="heading now-playing">
             <h3>NOW PLAYING</h3>
@@ -69,6 +73,9 @@
 
 
         <div id="topRated" class="topRated-div extra-div">
+          <button class="skip-btn top-rated-skip-btn" aria-label="Click to skip top rated section"
+            onclick="location.href = '#developer-cta'">Skip top rated
+            section</button>
           <section aria-label="You are now on the top rated section" class="section div-area">
             <header class="heading">
               <h4 class="paragraph-1">featured</h4>
@@ -91,7 +98,7 @@
 
           </section>
         </div>
-        <section aria-label="You are now on the developer cta section" class="div-3 developer-cta">
+        <section id="developer-cta" aria-label="You are now on the developer cta section" class="div-3 developer-cta">
           <article class="cta-content">
             <h6 class="cta-title">Build with TMDb</h6>
             <p class="cta-desc">Power your applications with the same movie data used here. Access thousands of movies,

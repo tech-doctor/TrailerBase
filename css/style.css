@@ -695,6 +695,26 @@ body {
 .content .nowPlaying-div {
   padding: 5em 2em;
   background-color: var(--bg-color);
+  position: relative;
+}
+
+.skip-btn {
+  background: #b20710;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  /* border-radius: 5px; */
+  cursor: pointer;
+  font-size: 16px;
+
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.skip-btn:hover {
+  background: #9a060f;
 }
 
 .content .nowPlaying-div .section .heading {
